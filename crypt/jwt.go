@@ -16,7 +16,7 @@ type (
 		you should set TokenStr manually to the token string you obtained from the client*/
 	}
 
-	StandardClaims jwt.StandardClaims
+	StandardClaims = jwt.StandardClaims
 
 	Token = jwt.Token
 )
