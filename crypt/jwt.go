@@ -15,7 +15,13 @@ type (
 		when calling 'Validate()' as a standalone,
 		you should set TokenStr manually to the token string you obtained from the client*/
 	}
+
+	StandardClaims jwt.StandardClaims
+
+	Token = jwt.Token
 )
+
+var HMAC_HS512 = jwt.SigningMethodHS512
 
 // Signs JWT token with given custom claims and signing method
 func (c *JWT) Sign(claims jwt.Claims, method jwt.SigningMethod) error {
