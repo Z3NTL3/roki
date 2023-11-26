@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/z3ntl3/roki/crypt"
 )
@@ -31,22 +32,21 @@ func main() {
 
 	c := &crypt.JWT{}
 	{
-		c.TokenStr = os.Getenv("token")
+		c.SecretEnv = "SECRET"
 	}
 
-	cl, err := c.Validate(&MyCustomClaims{}, func(t *crypt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SECRET")), nil
-	})
-	if err != nil {
+	myclaims := &MyCustomClaims{
+		Email: "efdal@gmail.com",
+		Role:  "hoi",
+		StandardClaims: &crypt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		},
+	}
+
+	if err := c.Sign(myclaims, crypt.HMAC_HS512); err != nil {
 		log.Fatal(err)
 	}
-
-	claims, ok := cl.(*MyCustomClaims)
-	if !ok {
-		log.Fatal("invalid token")
-	}
-	fmt.Println(claims.ExpiresAt, claims.Email, claims.Role)
-}
+	fmt.Println(c.TokenStr)
 ```
 ##### Validating
 
